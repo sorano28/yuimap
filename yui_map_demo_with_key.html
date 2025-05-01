@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Yui 緊迫マップ デモ（APIキー入り）</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <style>
+      #map {
+        height: 90vh;
+        width: 100%;
+      }
+      body {
+        font-family: sans-serif;
+        margin: 0;
+        padding: 0;
+      }
+    </style>
+    <script>
+      function initMap() {
+        const center = { lat: 35.6895, lng: 139.6917 }; // 東京
+
+        const map = new google.maps.Map(document.getElementById("map"), {
+          zoom: 11,
+          center: center,
+        });
+
+        const hospitals = [
+          {
+            name: "東京中央病院",
+            position: { lat: 35.6895, lng: 139.6917 },
+            level: "high"
+          },
+          {
+            name: "西東京医療センター",
+            position: { lat: 35.6586, lng: 139.7454 },
+            level: "medium"
+          },
+          {
+            name: "新宿メディカル",
+            position: { lat: 35.6938, lng: 139.7034 },
+            level: "low"
+          }
+        ];
+
+        hospitals.forEach(hospital => {
+          const color = hospital.level === "high" ? "red" :
+                        hospital.level === "medium" ? "orange" : "green";
+
+          const marker = new google.maps.Marker({
+            position: hospital.position,
+            map: map,
+            title: hospital.name,
+            icon: {
+              path: google.maps.SymbolPath.CIRCLE,
+              scale: 10,
+              fillColor: color,
+              fillOpacity: 1,
+              strokeWeight: 1,
+              strokeColor: "white"
+            }
+          });
+
+          const info = new google.maps.InfoWindow({
+            content: `<b>${hospital.name}</b><br>緊迫レベル: ${hospital.level}`
+          });
+
+          marker.addListener("click", () => info.open(map, marker));
+        });
+      }
+    </script>
+  </head>
+  <body>
+    <h2 style="text-align:center;">Yui 緊迫状況マップ（デモ）</h2>
+    <div id="map"></div>
+
+    <!-- デモ用APIキー付き（制限あり） -->
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBAt7zAp6u3hPU8CrkFysRzWz-P-U4PR5U&callback=initMap" async defer></script>
+  </body>
+</html>
